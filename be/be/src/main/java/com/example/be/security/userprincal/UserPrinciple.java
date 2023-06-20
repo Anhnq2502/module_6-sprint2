@@ -1,4 +1,4 @@
-package com.example.be.security.services;
+package com.example.be.security.userprincal;
 
 import com.example.be.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,50 +8,53 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserPrinciple implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
+    private String name;
     private String username;
     private String email;
-
     @JsonIgnore
     private String password;
-    private Collection<? extends GrantedAuthority> authorities;
+    private String avatar;
+    private Collection<? extends GrantedAuthority> roles;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+    public UserPrinciple(Long id, String name,String username, String email, String password, String avatar, Collection<? extends GrantedAuthority> roles) {
         this.id = id;
+        this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
+        this.avatar = avatar;
+        this.roles = roles;
     }
-
-    public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
-
-        return new UserDetailsImpl(
+    public static UserPrinciple build(User user){
+        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
+                new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+        return new UserPrinciple(
                 user.getId(),
-                user.getUserName(),
+                user.getName(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities);
-    }
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-    public Long getId() {
-        return id;
+                user.getAvatar(),
+                authorities
+        );
     }
 
-    public String getEmail() {
-        return email;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
     }
 
     @Override
@@ -82,14 +85,5 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
     }
 }

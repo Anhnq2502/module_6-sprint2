@@ -1,9 +1,9 @@
 package com.example.be.payload.response;
 
-public class MessageResponse {
+public class ResponseMessage {
     private String message;
 
-    public MessageResponse(String message) {
+    public ResponseMessage(String message) {
         this.message = message;
     }
 

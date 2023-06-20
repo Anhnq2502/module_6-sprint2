@@ -1,13 +1,16 @@
 package com.example.be.payload.request;
 
-import javax.validation.constraints.NotBlank;
-
-public class LoginRequest {
-    @NotBlank
+public class SignInForm {
     private String username;
-
-    @NotBlank
     private String password;
+
+    public SignInForm() {
+    }
+
+    public SignInForm(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public String getUsername() {
         return username;

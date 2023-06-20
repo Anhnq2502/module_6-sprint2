@@ -1,21 +1,25 @@
-package com.example.be.security.services;
+package com.example.be.security.userprincal;
 
 import com.example.be.model.User;
-import com.example.be.repository.UserRepository;
+import com.example.be.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailService implements UserDetailsService {
     @Autowired
-    UserRepository userRepository;
+    IUserRepository userRepository;
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username)
-                .orElseThrow(()-> new UsernameNotFoundException("Không tìm thấy tài khoản: " + username));
-        return UserDetailsImpl.build(user);
+        User user = userRepository.findByUsername(username).orElseThrow(
+                ()-> new UsernameNotFoundException("User Not Fount with user name or email: "+username)
+        );
+        return UserPrinciple.build(user);
     }
 }
