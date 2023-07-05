@@ -27,7 +27,7 @@ import java.util.Set;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/public")
 public class AuthController {
     @Autowired
     UserServiceImpl userService;
